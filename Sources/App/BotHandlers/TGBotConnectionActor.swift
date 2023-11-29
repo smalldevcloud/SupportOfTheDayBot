@@ -7,6 +7,9 @@
 import Vapor
 import TelegramVaporBot
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 final class DefaultBotHandlers {
     private static let startCommand = "/start"

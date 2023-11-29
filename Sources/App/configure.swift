@@ -1,12 +1,14 @@
 import Vapor
 import TelegramVaporBot
 
+
+
 // configures your application
 public func configure(_ app: Application) async throws {
     // uncomment to serve files from /Public folder
     // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
     let TGBOT: TGBotConnection = .init()
-    let tgApi: String = "6479176053:AAGuhTS8Fg9XS6Sviw6JlDMNScyJ2QMv9IQ"
+    let tgApi: String = ""
     /// set level of debug if you needed
     TGBot.log.logLevel = app.logger.logLevel
     let bot: TGBot = .init(app: app, botId: tgApi)
