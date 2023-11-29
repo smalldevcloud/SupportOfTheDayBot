@@ -6,6 +6,7 @@
 //
 import Vapor
 import TelegramVaporBot
+import Foundation
 
 final class DefaultBotHandlers {
     private static let startCommand = "/start"
