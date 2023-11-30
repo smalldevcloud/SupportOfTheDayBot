@@ -6,17 +6,17 @@
 //
 import Vapor
 import TelegramVaporBot
+// такой импорт необходим для запуска на unix, иначе будет ругаться на Networking
 import Foundation
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
 
 final class DefaultBotHandlers {
+//    строки, на котоые будут реагировать обработчики
     private static let startCommand = "/start"
     private static let supCommand = "Какой я сегодня саппорт?"
-    private static let addCommand = "/add"
-    private static let supAddedStr = "Саппорт добавлен"
-    
+//    массив возможных саппортов
     private static var sups = [
         "Загадочный саппорт",
         "Разъярённый саппорт", 
@@ -43,6 +43,7 @@ final class DefaultBotHandlers {
         "Саппорт съевший клиента",
         "Саппорт Шрёдингера"
     ]
+//    массив кодов http-запросов. Это необходимо для апи http.cat, которое вернёт картинку в ответ на такой код
     private static var codes = [
         "100",
         "101",
@@ -103,95 +104,47 @@ final class DefaultBotHandlers {
     ]
 
     static func addHandlers(app: Vapor.Application, connection: TGConnectionPrtcl) async {
+//        функция добавляет перечисленные здесь обработчики. Если сделать обработчик, но не добавить его сюда - действовать он не будет!
         await defaultBaseHandler(app: app, connection: connection)
         await commandStartHandler(app: app, connection: connection)
-        await commandSupHandler(app: app, connection: connection)
-        await commandAddHandler(app: app, connection: connection)
-        await commandImgHandler(app: app, connection: connection)
         
     }
-    
-    /// Handler for all updates
-    private static func defaultBaseHandler(app: Vapor.Application, connection: TGConnectionPrtcl) async {
-        await connection.dispatcher.add(TGBaseHandler({ update, bot in
-            guard let message = update.message else { return }
-            
-//            self.boops.append(message.text!)
-            
-            if message.text == supCommand {
-                guard let message = update.message else { return }
-                var img = Data()
-                if let url = URL(string: "https://http.cat/\(codes[Int.random(in: 0..<codes.count)])") {
-                    img = try Data(contentsOf: url)
-                }
-                let photoTG = TGInputFile(filename: "file", data: img)
-                var params: TGSendPhotoParams = .init(chatId: .chat(message.chat.id), photo: .file(photoTG))
-                params.caption = sups[Int.random(in: 0..<sups.count)]
-    //            let txtParams: TGSendMessageParams = .init(chatId: .chat(message.chat.id), text: )
-                try await connection.bot.sendPhoto(params: params)
-    //            try await update.message?.photo(bot: bot, TGChatPhoto(from: <#T##Decoder#>))
-            } else {
-                
-            }
-//            let params: TGSendMessageParams = .init(chatId: .chat(message.chat.id), text: "///")
-//            try await connection.bot.sendMessage(params: params)
-        }))
-    }
 
-    /// Handler for Commands
     private static func commandStartHandler(app: Vapor.Application, connection: TGConnectionPrtcl) async {
+//        чтобы запустить бота, юзер должен нажать кнопку START, она отправляет в чат комманду /start, на неё и среагирует этот обработчик. Он создаст для бота KeyboardButton (кнопку внизу, которая не скроллится и всегда прикреплена снизу), а так же отправляет небольшое объяснение пользователю, что делает данный бот.
         await connection.dispatcher.add(TGCommandHandler(commands: [startCommand]) { update, bot in
 
             let button: TGKeyboardButton = .init(text: "Какой я сегодня саппорт?")
             let rkm: TGReplyKeyboardMarkup = .init(keyboard: [[button]], resizeKeyboard: true)
-
             let reply: TGReplyMarkup = .replyKeyboardMarkup(rkm)
-            
 
-            
             try await update.message?.reply(text: "Тут ты можешь узнать, какой ты сегодня саппорт. Жми на кнопку", bot: bot, replyMarkup: reply)
         })
     }
-
-    private static func commandSupHandler(app: Vapor.Application, connection: TGConnectionPrtcl) async {
-        await connection.dispatcher.add(TGCommandHandler(commands: [supCommand]) { update, bot in
-            guard let message = update.message else { return }
-            var img = Data()
-            if let url = URL(string: "https://caffesta.com/images/caffesta-logo.png") {
-                img = try Data(contentsOf: url)
-            }
-            let photoTG = TGInputFile(filename: "file", data: img)
-            var params: TGSendPhotoParams = .init(chatId: .chat(message.chat.id), photo: .file(photoTG))
-            params.caption = sups[Int.random(in: 0..<sups.count)]
-//            let txtParams: TGSendMessageParams = .init(chatId: .chat(message.chat.id), text: )
-            try await connection.bot.sendPhoto(params: params)
-        })
-    }
     
-    private static func commandAddHandler(app: Vapor.Application, connection: TGConnectionPrtcl) async {
-        await connection.dispatcher.add(TGCommandHandler(commands: [addCommand]) { update, bot in
+    /// Handler for all updates
+    private static func defaultBaseHandler(app: Vapor.Application, connection: TGConnectionPrtcl) async {
+//        этот обработчик смотрит на все сообщения, приходящие в бот и в данном случае выполняет основную функцию, реагируя на текст единственной кнопки
+        await connection.dispatcher.add(TGBaseHandler({ update, bot in
             guard let message = update.message else { return }
             
-            let text = message.text!
-            let trimmedStr = text.replacingOccurrences(of: addCommand, with: "", options: NSString.CompareOptions.literal, range: nil)
-            sups.append(trimmedStr)
-            try await update.message?.reply(text: trimmedStr, bot: bot)
-        })
-    }
-    
-    private static func commandImgHandler(app: Vapor.Application, connection: TGConnectionPrtcl) async {
-        await connection.dispatcher.add(TGCommandHandler(commands: ["addImg"]) { update, bot in
-            guard let message = update.message else { return }
-            var img = Data()
-            if let url = URL(string: "https://caffesta.com/images/caffesta-logo.png") {
-                img = try Data(contentsOf: url)
+            if message.text == supCommand {
+//                если текст сообщения совпадает с текстом кнопки - идеёт обращение к http.cat. Берётся рандомный элемент из массива http-кодов выше. В ответе приходит картинка, к которой так же рандомно подставляется саппорт из массива саппортов, который также объявлен выше.
+                guard let message = update.message else { return }
+                var img = Data()
+                if let url = URL(string: "https://http.cat/\(codes[Int.random(in: 0..<codes.count)])") {
+//                    получение картинки в виде Data
+                    img = try Data(contentsOf: url)
+                }
+                let photoTG = TGInputFile(filename: "file", data: img)
+                var params: TGSendPhotoParams = .init(chatId: .chat(message.chat.id), photo: .file(photoTG))
+//                caption - подпись, которая будет под картинкой
+                params.caption = sups[Int.random(in: 0..<sups.count)]
+                try await connection.bot.sendPhoto(params: params)
+            } else {
+//                здесь можно добавить рекцию на любое другое сообщение
             }
-            let photoTG = TGInputFile(filename: "file", data: img)
-            var params: TGSendPhotoParams = .init(chatId: .chat(message.chat.id), photo: .file(photoTG))
-            params.caption = sups[Int.random(in: 0..<sups.count)]
-//            let txtParams: TGSendMessageParams = .init(chatId: .chat(message.chat.id), text: )
-            try await connection.bot.sendPhoto(params: params)
-//            try await update.message?.photo(bot: bot, TGChatPhoto(from: <#T##Decoder#>))
-        })
+        }))
     }
+
 }

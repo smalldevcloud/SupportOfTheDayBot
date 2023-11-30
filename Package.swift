@@ -18,13 +18,6 @@ let package = Package(
                 .product(name: "Vapor", package: "vapor"),
                 .product(name: "TelegramVaporBot", package: "telegram-vapor-bot"),
             ]
-        ),
-        .testTarget(name: "AppTests", dependencies: [
-            .target(name: "App"),
-            .product(name: "XCTVapor", package: "vapor"),
-
-            // Workaround for https://github.com/apple/swift-package-manager/issues/6940
-            .product(name: "Vapor", package: "vapor"),
-        ])
+        )
     ]
 )
