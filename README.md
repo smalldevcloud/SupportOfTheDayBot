@@ -4,14 +4,14 @@
 ##### Что делает: по нажатию на кнопку в чате с ботом берёт случайную картинку с http.cat и привязав к ней рандомную подпись из массива подписей, заданного в проекте, отсылает в переписку сообщение, давая узнать какой ты сегодня специалист техподдержки.
 ![alt text](https://github.com/smalldevcloud/SupportOfTheDayBot/blob/main/Public/screenshot.jpg?raw=true)
 ##### Что использует: 
- [Vapor](https://vapor.codes/) - веб-фреймворк на Swift
- [Telegram Vapor Bot](https://github.com/nerzh/telegram-vapor-bot) - обёртка для облегчения работы с апи телеграма - https://github.com/nerzh/telegram-vapor-bot 
- [http.cat](https://http.cat/) - сайт, возвращаю смешные картинки с котиками для каждого из http-статусов
- [Google Compute Engine](cloud.google.com) - хостинг, на котором можно захостить своего бота для его непрерывной работы 
+ 1. [Vapor](https://vapor.codes/) - веб-фреймворк на Swift
+ 2. [Telegram Vapor Bot](https://github.com/nerzh/telegram-vapor-bot) - обёртка для облегчения работы с апи телеграма - https://github.com/nerzh/telegram-vapor-bot 
+ 3. [http.cat](https://http.cat/) - сайт, возвращаю смешные картинки с котиками для каждого из http-статусов
+ 4. [Google Compute Engine](cloud.google.com) - хостинг, на котором можно захостить своего бота для его непрерывной работы 
 ##### Что ещё:
 #####  Всё уже было подробно описано вот в [этой статье](https://biser.medium.com/how-to-create-a-telegram-bot-with-swift-using-vapor-d302d27b4844), за что большое спасибо [dimabiserov](https://github.com/dimabiserov)
 #####  Я лишь чуть актуализировал (кое-что изменилось с 2021 года) 
- 
+##### Mac OS 14.1(Sonoma), Xcode 15.0.1, Swift tools: 5.9
 
 Для того, чтобы сгенерировать проект на Vapor нужно сначала этот Vapor установить.
 1.	Открыть терминал в нужной папке и если Vapor ещё не установлен выполнить комманды:
@@ -21,7 +21,7 @@ brew install vapor
 ```
 vapor new newtgbot
 ```
-    *newtgbot - это название, которое получит проект
+> newtgbot - это название, которое получит проект
 2.	Vapor сгенерит проект, в нём открыть файл Package.swift
 3.	В configure.swift добавить:
 ```swift
