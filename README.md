@@ -2,7 +2,7 @@
 
 ##### Пример телеграм-бота, написанного на swift. 
 ##### Что делает: по нажатию на кнопку в чате с ботом берёт случайную картинку с http.cat и привязав к ней рандомную подпись из массива подписей, заданного в проекте, отсылает в переписку сообщение, давая узнать какой ты сегодня специалист техподдержки.
-![alt text](https://github.com/smalldevcloud/SupportOfTheDayBot/blob/main/screenshot.jpg?raw=true)
+![alt text](https://github.com/smalldevcloud/SupportOfTheDayBot/blob/main/Public/screenshot.jpg?raw=true)
 ##### Что использует: 
  [Vapor](https://vapor.codes/) - веб-фреймворк на Swift
  [Telegram Vapor Bot](https://github.com/nerzh/telegram-vapor-bot) - обёртка для облегчения работы с апи телеграма - https://github.com/nerzh/telegram-vapor-bot 
