@@ -143,6 +143,8 @@ final class DefaultBotHandlers {
                 try await connection.bot.sendPhoto(params: params)
             } else {
 //                здесь можно добавить рекцию на любое другое сообщение
+                print(message.text)
+                app.logger.info("\(message.text)")
             }
         }))
     }
