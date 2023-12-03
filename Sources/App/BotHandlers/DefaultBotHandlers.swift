@@ -140,10 +140,10 @@ final class DefaultBotHandlers {
                 var params: TGSendPhotoParams = .init(chatId: .chat(message.chat.id), photo: .file(photoTG))
 //                caption - подпись, которая будет под картинкой
                 params.caption = sups[Int.random(in: 0..<sups.count)]
+                app.logger.info("Запрос на саппорта дня")
                 try await connection.bot.sendPhoto(params: params)
             } else {
 //                здесь можно добавить рекцию на любое другое сообщение
-                print(message.text)
                 app.logger.info("\(message.text)")
             }
         }))
