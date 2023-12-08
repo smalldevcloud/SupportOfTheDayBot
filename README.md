@@ -3,11 +3,12 @@
 ##### Пример телеграм-бота, написанного на swift. 
 ##### Что делает: по нажатию на кнопку в чате с ботом берёт случайную картинку с http.cat и привязав к ней рандомную подпись из массива подписей, заданного в проекте, отсылает в переписку сообщение, давая узнать какой ты сегодня специалист техподдержки.
 ![alt text](https://github.com/smalldevcloud/SupportOfTheDayBot/blob/main/Public/screenshot.jpg?raw=true)
+##### Опробовать бота не повторяя проект можно здесь https://t.me/CafSupBott_bot
 ##### Что использует: 
  1. [Vapor](https://vapor.codes/) - веб-фреймворк на Swift
  2. [Telegram Vapor Bot](https://github.com/nerzh/telegram-vapor-bot) - обёртка для облегчения работы с апи телеграма - https://github.com/nerzh/telegram-vapor-bot 
  3. [http.cat](https://http.cat/) - сайт, возвращаю смешные картинки с котиками для каждого из http-статусов
- 4. [Google Compute Engine](cloud.google.com) - хостинг, на котором можно захостить своего бота для его непрерывной работы 
+ 4. [Google Compute Engine](https://console.cloud.google.com/) - хостинг, на котором можно захостить своего бота для его непрерывной работы 
 ##### Что ещё:
 #####  Всё уже было подробно описано вот в [этой статье](https://biser.medium.com/how-to-create-a-telegram-bot-with-swift-using-vapor-d302d27b4844), за что большое спасибо [dimabiserov](https://github.com/dimabiserov)
 #####  Я лишь чуть актуализировал (кое-что изменилось с 2021 года) 
@@ -268,7 +269,7 @@ git clone https://github.com/vapor/toolbox.git
 cd toolbox
 ```
 ```
-git checkout <desired version>
+git checkout master
 ```
 ```
 make install
@@ -283,9 +284,18 @@ cd SupportOfTheDayBot
 ```
 24. Из папки с проектом сбилдить и запустить проект
 ```
-vapor build
+sudo swift build
 ```
 ```
-vapor run
+sudo swift run &
 ```
+Амперсанд "&" после run необходим для того, чтобы проект продолжил свою работу после того как вы закроете консоль или соедение по ssh прервётся, т.к. это терминал, а в терминале процессы ведут себя так - прекращают свою работу если окно закрывается, если запущено без амперсанда.
 ---- Если начинает ругаться на какие-нибудь файлы вроде Package.resolved или с расширением .lock, то удалить их (добавить sudo, если access denied) и повторить запуск 
+
+25. Ещё кроха инфы - как остановить работу сервера, если он был запущен с амперсандом. Первой командой узнаём PID процесса, который запустился на этом порту. Второй останавливаем процесс зная номер PID (в моём примере это 18806)
+```
+sudo ss -lptn 'sport = :80'
+```
+```
+sudo kill -9 18806
+```
